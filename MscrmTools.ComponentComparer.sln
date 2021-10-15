@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MscrmTools.ComponentComparer", "MscrmTools.ComponentComparer\MscrmTools.ComponentComparer.csproj", "{17904461-8725-4DF5-9956-D93C76B85081}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Rappen.XTB.Helpers", "Rappen.XTB.Helper\Rappen.XTB.Helpers.shproj", "{0B88B381-EE9D-41E8-A62C-90152C42DE90}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Rappen.XRM.Helpers", "Rappen.XTB.Helper\Rappen.XRM.Helpers.shproj", "{2EBF1257-150F-46C8-8BBD-2A9235C0EB45}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Rappen.XTB.Helper\Rappen.XTB.Helpers.projitems*{0b88b381-ee9d-41e8-a62c-90152c42de90}*SharedItemsImports = 13
+		Rappen.XTB.Helper\Rappen.XRM.Helpers.projitems*{17904461-8725-4df5-9956-d93c76b85081}*SharedItemsImports = 4
+		Rappen.XTB.Helper\Rappen.XTB.Helpers.projitems*{17904461-8725-4df5-9956-d93c76b85081}*SharedItemsImports = 4
+		Rappen.XTB.Helper\Rappen.XRM.Helpers.projitems*{2ebf1257-150f-46c8-8bbd-2a9235c0eb45}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17904461-8725-4DF5-9956-D93C76B85081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17904461-8725-4DF5-9956-D93C76B85081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17904461-8725-4DF5-9956-D93C76B85081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17904461-8725-4DF5-9956-D93C76B85081}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B6BAAA47-4B7F-451E-9F31-6D60C368CB29}
+	EndGlobalSection
+EndGlobal
