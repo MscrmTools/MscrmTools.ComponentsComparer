@@ -89,7 +89,7 @@ namespace MscrmTools.ComponentComparer
 
             if (sourceCompare == btnCompare)
             {
-                if (txtFormId.Tag != null || txtEntity.Text.Length == 0 || txtAttribute.Text.Length == 0)
+                if (txtFormId.Text.Length == 0 || txtEntity.Text.Length == 0 || txtAttribute.Text.Length == 0)
                 {
                     MessageBox.Show(this, "Please define an entity, an attribute and a record id before comparing", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -97,11 +97,16 @@ namespace MscrmTools.ComponentComparer
 
                 entity = txtEntity.Text;
                 attribute = txtAttribute.Text;
-                recordId = new Guid(txtFormId.Text);
+
+                if (!Guid.TryParse(txtFormId.Text, out recordId))
+                {
+                    MessageBox.Show(this, "Please provide a valid GUID", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
             else
             {
-                if (txtRecord.Tag != null)
+                if (txtRecord.Tag == null)
                 {
                     MessageBox.Show(this, "Please select a record before comparing", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -117,9 +122,9 @@ namespace MscrmTools.ComponentComparer
             {
                 eA = Service.Retrieve(entity, recordId, new ColumnSet(attribute));
             }
-            catch
+            catch (Exception error)
             {
-                MessageBox.Show(this, "Cannot find record in source environment");
+                MessageBox.Show(this, error.Message, "Source record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -127,9 +132,9 @@ namespace MscrmTools.ComponentComparer
             {
                 eB = TargetService.Retrieve(entity, recordId, new ColumnSet(attribute));
             }
-            catch
+            catch (Exception error)
             {
-                MessageBox.Show(this, "Cannot find record in target environment");
+                MessageBox.Show(this, error.Message, "Target record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
