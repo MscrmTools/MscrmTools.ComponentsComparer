@@ -20,7 +20,7 @@ steps:
 - script: |
     git config --global user.email "tanguy92@hotmail.com"
 - script: |
-   git submodule update --force
+   git pull
     
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
