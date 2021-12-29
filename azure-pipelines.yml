@@ -18,6 +18,7 @@ steps:
     checkLatest: true
 
 - script: |
+    git config --global user.name "MscrmTools"
     git pull https://github.com/rappen/Rappen.XTB.Helper main --allow-unrelated-histories
     
 - task: NuGetCommand@2
