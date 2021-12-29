@@ -19,6 +19,9 @@ steps:
   inputs:
     restoreSolution: '$(Parameters.solution)'
 
+- script: |
+    git submodule add https://github.com/rappen/Rappen.XTB.Helper
+
 - task: VSBuild@1
   displayName: 'Build solution **\*.sln'
   inputs:
