@@ -8,6 +8,9 @@ variables:
   ToolName: 'MscrmTools.ComponentsComparer'
 
 steps:
+
+- checkout: self
+  submodules: true
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 4.6.0'
   inputs:
@@ -21,8 +24,6 @@ steps:
   displayName: 'NuGet restore'
   inputs:
     restoreSolution: '$(Parameters.solution)'
-
-
 
 - task: VSBuild@1
   displayName: 'Build solution **\*.sln'
