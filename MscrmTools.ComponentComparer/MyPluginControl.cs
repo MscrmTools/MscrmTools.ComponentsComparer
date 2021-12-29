@@ -6,6 +6,7 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using MscrmTools.ComponentComparer.AppCode;
+using Newtonsoft.Json.Linq;
 using Rappen.XTB.Helpers.Controls;
 using Rappen.XTB.Helpers.Extensions;
 using System;
@@ -48,7 +49,8 @@ namespace MscrmTools.ComponentComparer
 
         public void Compare()
         {
-            string entity, attribute;
+            string entity, attribute, name;
+            bool searchByPrimaryName = false;
             Guid recordId;
 
             if (sourceCompare == btnCompareSpecific)
@@ -97,11 +99,11 @@ namespace MscrmTools.ComponentComparer
 
                 entity = txtEntity.Text;
                 attribute = txtAttribute.Text;
+                name = txtFormId.Text;
 
                 if (!Guid.TryParse(txtFormId.Text, out recordId))
                 {
-                    MessageBox.Show(this, "Please provide a valid GUID", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    searchByPrimaryName = true;
                 }
             }
             else
@@ -115,12 +117,37 @@ namespace MscrmTools.ComponentComparer
                 entity = xecb.SelectedEntity.LogicalName;
                 attribute = xacb.SelectedAttribute.LogicalName;
                 recordId = (Guid)txtRecord.Tag;
+                name = txtRecord.Text;
             }
 
             Entity eA, eB;
             try
             {
-                eA = Service.Retrieve(entity, recordId, new ColumnSet(attribute));
+                if (searchByPrimaryName)
+                {
+                    var emd = ((List<EntityMetadata>)xecb.DataSource).First(e => e.LogicalName == entity);
+                    eA = Service.RetrieveMultiple(new QueryExpression(entity)
+                    {
+                        ColumnSet = new ColumnSet(attribute),
+                        Criteria = new FilterExpression
+                        {
+                            Conditions =
+                         {
+                             new ConditionExpression(emd.PrimaryNameAttribute, ConditionOperator.Equal, name)
+                         }
+                        }
+                    }).Entities.FirstOrDefault();
+
+                    if (eA == null)
+                    {
+                        MessageBox.Show(this, $"No {entity} found with primary name \"{name}\"", "Source record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    eA = Service.Retrieve(entity, recordId, new ColumnSet(attribute));
+                }
             }
             catch (Exception error)
             {
@@ -130,16 +157,56 @@ namespace MscrmTools.ComponentComparer
 
             try
             {
-                eB = TargetService.Retrieve(entity, recordId, new ColumnSet(attribute));
+                if (searchByPrimaryName)
+                {
+                    var emd = ((List<EntityMetadata>)xecb.DataSource).First(e => e.LogicalName == entity);
+                    eB = TargetService.RetrieveMultiple(new QueryExpression(entity)
+                    {
+                        ColumnSet = new ColumnSet(attribute),
+                        Criteria = new FilterExpression
+                        {
+                            Conditions =
+                         {
+                             new ConditionExpression(emd.PrimaryNameAttribute, ConditionOperator.Equal, name)
+                         }
+                        }
+                    }).Entities.FirstOrDefault();
+
+                    if (eB == null)
+                    {
+                        MessageBox.Show(this, $"No {entity} found with primary name \"{name}\"", "Target record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    eB = TargetService.Retrieve(entity, recordId, new ColumnSet(attribute));
+                }
             }
             catch (Exception error)
             {
-                MessageBox.Show(this, error.Message, "Target record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var emd = ((List<EntityMetadata>)xecb.DataSource).First(e => e.LogicalName == entity);
+                eB = TargetService.RetrieveMultiple(new QueryExpression(entity)
+                {
+                    ColumnSet = new ColumnSet(attribute),
+                    Criteria = new FilterExpression
+                    {
+                        Conditions =
+                         {
+                             new ConditionExpression(emd.PrimaryNameAttribute, ConditionOperator.Equal, name)
+                         }
+                    }
+                }).Entities.FirstOrDefault();
+
+                if (eB == null)
+                {
+                    MessageBox.Show(this, error.Message, "Target record cannot be found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
-            string sA = GetStringContent(eA, attribute);
-            string sB = GetStringContent(eB, attribute);
+            string sA = TryFormatJson(GetStringContent(eA, attribute));
+            string sB = TryFormatJson(GetStringContent(eB, attribute));
 
             Compare(sA, sB);
         }
@@ -271,6 +338,27 @@ namespace MscrmTools.ComponentComparer
                     Service = Service
                 };
 
+                Guid viewId = Guid.NewGuid();
+
+                dialog.AdditionalViews = new Dictionary<string, List<Entity>>
+                {
+                    {"role", new List<Entity>
+                        {
+                            new Entity("savedquery")
+                            {
+                                Id = viewId,
+                                Attributes =
+                                {
+                                    {"name", "Root roles" },
+                                    {"fetchxml", $"<fetch mapping=\"logical\"><entity name=\"role\"><attribute name=\"name\"/><order attribute=\"name\"/><filter><condition attribute=\"parentroleid\" operator=\"null\"/></filter></entity></fetch>" },
+                                    {"layoutxml", $"<grid name=\"resultset\" object=\"1036\" jump=\"name\" select=\"1\" icon=\"1036\" preview=\"1\"><row name=\"result\" id=\"roleid\"><cell name=\"name\" width=\"150\" /></row></grid>" },
+                                }
+                            }
+                        }
+                    }
+                };
+                dialog.SetDefaultView("role", viewId);
+
                 var result = dialog.ShowDialog(this);
 
                 if (result == DialogResult.OK)
@@ -304,8 +392,8 @@ namespace MscrmTools.ComponentComparer
             GetTextLines(contentA, contentB, out a, out b);
 
             bool isBinaryCompare = leadingCharactersToIgnore > 0;
-            bool ignoreCase = isBinaryCompare ? false : Options.IgnoreCase;
-            bool ignoreTextWhitespace = isBinaryCompare ? false : Options.IgnoreTextWhitespace;
+            bool ignoreCase = !isBinaryCompare && Options.IgnoreCase;
+            bool ignoreTextWhitespace = !isBinaryCompare && Options.IgnoreTextWhitespace;
             TextDiff diff = new TextDiff(Options.HashType, ignoreCase, ignoreTextWhitespace, leadingCharactersToIgnore, !Options.ShowChangeAsDeleteInsert);
             EditScript script = diff.Execute(a, b);
 
@@ -350,8 +438,18 @@ namespace MscrmTools.ComponentComparer
             return string.Empty;
         }
 
-        private void MyPluginControl_Load(object sender, EventArgs e)
-        { }
+        private string TryFormatJson(string s)
+        {
+            try
+            {
+                JObject json = JObject.Parse(s);
+                return json.ToString();
+            }
+            catch
+            {
+                return s;
+            }
+        }
 
         private void tsbSetTargetEnv_Click(object sender, EventArgs e)
         {

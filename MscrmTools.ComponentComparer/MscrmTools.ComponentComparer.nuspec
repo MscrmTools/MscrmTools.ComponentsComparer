@@ -11,7 +11,10 @@
     <iconUrl>https://raw.githubusercontent.com/wiki/MscrmTools/XrmToolBox/Images/logo_0100.png</iconUrl>
     <description>Compare records between two environments</description>
     <summary>Compare records between two environments</summary>
-    <releaseNotes>Initial release
+    <releaseNotes>Format JSON content
+Added default view for tables that don't have any view
+Display only root roles when comparing security roles
+Fix searching with primary name when unique identifiers are different in both environments
     </releaseNotes>
     <tags>XrmToolBox Plugin Components Comparer</tags>
     <dependencies>

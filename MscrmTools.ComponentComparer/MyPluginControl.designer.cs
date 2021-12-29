@@ -423,7 +423,6 @@ namespace MscrmTools.ComponentComparer
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MyPluginControl";
             this.Size = new System.Drawing.Size(1754, 895);
-            this.Load += new System.EventHandler(this.MyPluginControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
             this.pnlTop.ResumeLayout(false);
