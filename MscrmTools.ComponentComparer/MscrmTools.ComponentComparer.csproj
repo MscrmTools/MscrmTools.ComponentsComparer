@@ -40,20 +40,20 @@
     <Reference Include="McTools.Xrm.Connection.WinForms, Version=1.2021.9.46, Culture=neutral, PublicKeyToken=f1559f79cf894e27, processorArchitecture=MSIL">
       <HintPath>..\packages\MscrmTools.Xrm.Connection.1.2021.9.46\lib\net462\McTools.Xrm.Connection.WinForms.dll</HintPath>
     </Reference>
-    <Reference Include="Menees.Common">
-      <HintPath>..\..\..\..\Downloads\Diff.Net-Portable-4.0.3-Framework\Menees.Common.dll</HintPath>
+    <Reference Include="Menees.Common, Version=4.9.11.0, Culture=neutral, PublicKeyToken=47808368f4c49fe0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Menees.Common.4.9.11\lib\net45\Menees.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Menees.Diffs">
-      <HintPath>..\..\..\..\Downloads\Diff.Net-Portable-4.0.3-Framework\Menees.Diffs.dll</HintPath>
+    <Reference Include="Menees.Diffs, Version=4.9.11.0, Culture=neutral, PublicKeyToken=47808368f4c49fe0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Menees.Diffs.4.9.11\lib\net45\Menees.Diffs.dll</HintPath>
     </Reference>
-    <Reference Include="Menees.Diffs.Windows.Forms">
-      <HintPath>..\..\..\..\Downloads\Diff.Net-Portable-4.0.3-Framework\Menees.Diffs.Windows.Forms.dll</HintPath>
+    <Reference Include="Menees.Diffs.Windows.Forms, Version=4.9.11.0, Culture=neutral, PublicKeyToken=47808368f4c49fe0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Menees.Diffs.Windows.Forms.4.9.11\lib\net45\Menees.Diffs.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="Menees.Windows">
-      <HintPath>..\..\..\..\Downloads\Diff.Net-Portable-4.0.3-Framework\Menees.Windows.dll</HintPath>
+    <Reference Include="Menees.Windows, Version=4.9.11.0, Culture=neutral, PublicKeyToken=47808368f4c49fe0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Menees.Windows.4.9.11\lib\net45\Menees.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="Menees.Windows.Forms">
-      <HintPath>..\..\..\..\Downloads\Diff.Net-Portable-4.0.3-Framework\Menees.Windows.Forms.dll</HintPath>
+    <Reference Include="Menees.Windows.Forms, Version=4.9.11.0, Culture=neutral, PublicKeyToken=47808368f4c49fe0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Menees.Windows.Forms.4.9.11\lib\net45\Menees.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.42\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
@@ -135,7 +135,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
