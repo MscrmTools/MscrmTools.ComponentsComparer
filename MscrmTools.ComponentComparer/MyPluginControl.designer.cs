@@ -91,27 +91,27 @@ namespace MscrmTools.ComponentComparer
             // tslSourceEnv
             // 
             this.tslSourceEnv.Name = "tslSourceEnv";
-            this.tslSourceEnv.Size = new System.Drawing.Size(70, 28);
+            this.tslSourceEnv.Size = new System.Drawing.Size(70, 33);
             this.tslSourceEnv.Text = "Source:";
             // 
             // tslSourceEnvSelected
             // 
             this.tslSourceEnvSelected.ForeColor = System.Drawing.Color.Red;
             this.tslSourceEnvSelected.Name = "tslSourceEnvSelected";
-            this.tslSourceEnvSelected.Size = new System.Drawing.Size(70, 28);
+            this.tslSourceEnvSelected.Size = new System.Drawing.Size(70, 33);
             this.tslSourceEnvSelected.Text = "Not set";
             // 
             // tslTargetEnv
             // 
             this.tslTargetEnv.Name = "tslTargetEnv";
-            this.tslTargetEnv.Size = new System.Drawing.Size(64, 28);
+            this.tslTargetEnv.Size = new System.Drawing.Size(64, 33);
             this.tslTargetEnv.Text = "Target:";
             // 
             // tslTargetEnvSelected
             // 
             this.tslTargetEnvSelected.ForeColor = System.Drawing.Color.Red;
             this.tslTargetEnvSelected.Name = "tslTargetEnvSelected";
-            this.tslTargetEnvSelected.Size = new System.Drawing.Size(70, 28);
+            this.tslTargetEnvSelected.Size = new System.Drawing.Size(70, 33);
             this.tslTargetEnvSelected.Text = "Not set";
             // 
             // tsbSetTargetEnv
@@ -120,14 +120,14 @@ namespace MscrmTools.ComponentComparer
             this.tsbSetTargetEnv.Image = global::MscrmTools.ComponentComparer.Properties.Resources.lightning;
             this.tsbSetTargetEnv.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSetTargetEnv.Name = "tsbSetTargetEnv";
-            this.tsbSetTargetEnv.Size = new System.Drawing.Size(34, 28);
+            this.tsbSetTargetEnv.Size = new System.Drawing.Size(34, 33);
             this.tsbSetTargetEnv.Text = "Set target environment";
             this.tsbSetTargetEnv.Click += new System.EventHandler(this.tsbSetTargetEnv_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
             // pnlTop
             // 
@@ -171,7 +171,8 @@ namespace MscrmTools.ComponentComparer
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "Security Roles",
-            "Webresources"});
+            "Webresources",
+            "Model driven app"});
             this.comboBox1.Location = new System.Drawing.Point(121, 2);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(328, 28);
@@ -195,13 +196,13 @@ namespace MscrmTools.ComponentComparer
             // 
             // btnLookupSpecific
             // 
+            this.btnLookupSpecific.Enabled = false;
             this.btnLookupSpecific.Location = new System.Drawing.Point(402, 35);
             this.btnLookupSpecific.Name = "btnLookupSpecific";
             this.btnLookupSpecific.Size = new System.Drawing.Size(47, 29);
             this.btnLookupSpecific.TabIndex = 18;
             this.btnLookupSpecific.Text = "...";
             this.btnLookupSpecific.UseVisualStyleBackColor = true;
-            this.btnLookupSpecific.Enabled = false;
             this.btnLookupSpecific.Click += new System.EventHandler(this.btnLookupSpecific_Click);
             // 
             // label4
@@ -209,9 +210,9 @@ namespace MscrmTools.ComponentComparer
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 6);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 20);
+            this.label4.Size = new System.Drawing.Size(43, 20);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Entity";
+            this.label4.Text = "Type";
             // 
             // btnCompareSpecific
             // 
@@ -345,13 +346,13 @@ namespace MscrmTools.ComponentComparer
             // 
             // btnLookup
             // 
+            this.btnLookup.Enabled = false;
             this.btnLookup.Location = new System.Drawing.Point(405, 88);
             this.btnLookup.Name = "btnLookup";
             this.btnLookup.Size = new System.Drawing.Size(47, 31);
             this.btnLookup.TabIndex = 15;
             this.btnLookup.Text = "...";
             this.btnLookup.UseVisualStyleBackColor = true;
-            this.btnLookup.Enabled = false;
             this.btnLookup.Click += new System.EventHandler(this.btnLookup_Click);
             // 
             // label2

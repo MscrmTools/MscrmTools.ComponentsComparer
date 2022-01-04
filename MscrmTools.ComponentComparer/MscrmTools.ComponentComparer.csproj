@@ -219,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppCode\Options.cs" />
+    <Compile Include="AppCode\ModernAppHelper.cs" />
     <Compile Include="AppCode\WebresourceHelper.cs" />
     <Compile Include="AppCode\SecurityRoleHelper.cs" />
     <Compile Include="MyPlugin.cs" />

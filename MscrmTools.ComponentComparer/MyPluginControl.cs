@@ -25,7 +25,8 @@ namespace MscrmTools.ComponentComparer
     {
         private bool doCompare = false;
         private Button sourceCompare;
-        private CrmServiceClient TargetService;
+        private List<EntityMetadata> targetEmds;
+        private CrmServiceClient targetService;
 
         public MyPluginControl()
         {
@@ -60,7 +61,7 @@ namespace MscrmTools.ComponentComparer
                     try
                     {
                         var roleA = SecurityRoleHelper.GetRolePrivileges(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, Service);
-                        var roleB = SecurityRoleHelper.GetRolePrivileges(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, TargetService);
+                        var roleB = SecurityRoleHelper.GetRolePrivileges(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, targetService);
 
                         Compare(roleA, roleB);
                     }
@@ -75,13 +76,42 @@ namespace MscrmTools.ComponentComparer
                     try
                     {
                         var contentA = WebresourceHelper.GetWebresourceContent(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, Service);
-                        var contentB = WebresourceHelper.GetWebresourceContent(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, TargetService);
+                        var contentB = WebresourceHelper.GetWebresourceContent(textBox1.Tag != null ? (Guid)textBox1.Tag : Guid.Empty, textBox1.Text, targetService);
 
                         Compare(contentA, contentB);
                     }
                     catch
                     {
                         MessageBox.Show(this, "Cannot find the specified web resource in the target environment", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+                else if (comboBox1.SelectedItem?.ToString() == "Model driven app")
+                {
+                    try
+                    {
+                        var recordA = Service.Retrieve("appmodule", (Guid)textBox1.Tag, new ColumnSet("descriptor", "uniquename"));
+                        var contentA = recordA.GetAttributeValue<string>("descriptor");
+                        var contentB = targetService.RetrieveMultiple(new QueryExpression("appmodule")
+                        {
+                            ColumnSet = new ColumnSet("descriptor"),
+                            Criteria = new FilterExpression
+                            {
+                                Conditions =
+                                 {
+                                     new ConditionExpression("uniquename", ConditionOperator.Equal, recordA.GetAttributeValue<string>("uniquename"))
+                                 }
+                            }
+                        }).Entities.FirstOrDefault()?.GetAttributeValue<string>("descriptor");
+
+                        contentA = ModernAppHelper.OptimizeAppDescriptor(contentA, Service, (List<EntityMetadata>)xecb.DataSource);
+                        contentB = ModernAppHelper.OptimizeAppDescriptor(contentB, targetService, targetEmds);
+
+                        Compare(TryFormatJson(contentA), TryFormatJson(contentB));
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show(this, $"An error occured when working with Model driven app descriptor: {error.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
@@ -160,7 +190,7 @@ namespace MscrmTools.ComponentComparer
                 if (searchByPrimaryName)
                 {
                     var emd = ((List<EntityMetadata>)xecb.DataSource).First(e => e.LogicalName == entity);
-                    eB = TargetService.RetrieveMultiple(new QueryExpression(entity)
+                    eB = targetService.RetrieveMultiple(new QueryExpression(entity)
                     {
                         ColumnSet = new ColumnSet(attribute),
                         Criteria = new FilterExpression
@@ -180,13 +210,13 @@ namespace MscrmTools.ComponentComparer
                 }
                 else
                 {
-                    eB = TargetService.Retrieve(entity, recordId, new ColumnSet(attribute));
+                    eB = targetService.Retrieve(entity, recordId, new ColumnSet(attribute));
                 }
             }
             catch (Exception error)
             {
                 var emd = ((List<EntityMetadata>)xecb.DataSource).First(e => e.LogicalName == entity);
-                eB = TargetService.RetrieveMultiple(new QueryExpression(entity)
+                eB = targetService.RetrieveMultiple(new QueryExpression(entity)
                 {
                     ColumnSet = new ColumnSet(attribute),
                     Criteria = new FilterExpression
@@ -222,7 +252,7 @@ namespace MscrmTools.ComponentComparer
             {
                 tslSourceEnvSelected.Text = detail.ConnectionName;
                 tslSourceEnvSelected.ForeColor = Color.Green;
-                xecb.DataSource = detail.MetadataCache?.ToList() ?? GetMetadata();
+                xecb.DataSource = detail.MetadataCache?.ToList() ?? GetMetadata(newService);
 
                 btnLookup.Enabled = true;
                 btnLookupSpecific.Enabled = true;
@@ -231,7 +261,8 @@ namespace MscrmTools.ComponentComparer
             {
                 tslTargetEnvSelected.Text = detail.ConnectionName;
                 tslTargetEnvSelected.ForeColor = Color.Green;
-                TargetService = detail.GetCrmServiceClient();
+                targetService = detail.GetCrmServiceClient();
+                targetEmds = detail.MetadataCache?.ToList() ?? GetMetadata(targetService);
 
                 if (doCompare)
                 {
@@ -300,7 +331,7 @@ namespace MscrmTools.ComponentComparer
         {
             sourceCompare = (Button)sender;
 
-            if (TargetService == null)
+            if (targetService == null)
             {
                 doCompare = true;
                 AddAdditionalOrganization();
@@ -383,6 +414,22 @@ namespace MscrmTools.ComponentComparer
                     textBox1.Tag = dialog.Records.First().Id;
                 }
             }
+            else if (comboBox1.SelectedItem?.ToString() == "Model driven app")
+            {
+                var dialog = new XRMLookupDialog()
+                {
+                    LogicalName = "appmodule",
+                    Service = Service
+                };
+
+                var result = dialog.ShowDialog(this);
+
+                if (result == DialogResult.OK)
+                {
+                    textBox1.Text = dialog.Records.First().GetAttributeValue<string>("name");
+                    textBox1.Tag = dialog.Records.First().Id;
+                }
+            }
         }
 
         private void Compare(string contentA, string contentB)
@@ -408,9 +455,9 @@ namespace MscrmTools.ComponentComparer
             }
         }
 
-        private List<EntityMetadata> GetMetadata()
+        private List<EntityMetadata> GetMetadata(IOrganizationService service)
         {
-            return Service.LoadEntities().EntityMetadata.ToList();
+            return service.LoadEntities().EntityMetadata.ToList();
         }
 
         private string GetStringContent(Entity record, string attribute)
