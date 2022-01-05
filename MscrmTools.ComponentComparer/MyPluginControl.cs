@@ -18,10 +18,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using XrmToolBox.Extensibility;
+using XrmToolBox.Extensibility.Interfaces;
 
 namespace MscrmTools.ComponentComparer
 {
-    public partial class MyPluginControl : MultipleConnectionsPluginControlBase
+    public partial class MyPluginControl : MultipleConnectionsPluginControlBase, IMessageBusHost
     {
         private bool doCompare = false;
         private Button sourceCompare;
@@ -32,6 +33,8 @@ namespace MscrmTools.ComponentComparer
         {
             InitializeComponent();
         }
+
+        public event EventHandler<MessageBusEventArgs> OnOutgoingMessage;
 
         internal enum CompareType
         {
@@ -121,7 +124,7 @@ namespace MscrmTools.ComponentComparer
 
             if (sourceCompare == btnCompare)
             {
-                if (txtFormId.Text.Length == 0 || txtEntity.Text.Length == 0 || txtAttribute.Text.Length == 0)
+                if (txtRecordId.Text.Length == 0 || txtEntity.Text.Length == 0 || txtAttribute.Text.Length == 0)
                 {
                     MessageBox.Show(this, "Please define an entity, an attribute and a record id before comparing", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -129,9 +132,9 @@ namespace MscrmTools.ComponentComparer
 
                 entity = txtEntity.Text;
                 attribute = txtAttribute.Text;
-                name = txtFormId.Text;
+                name = txtRecordId.Text;
 
-                if (!Guid.TryParse(txtFormId.Text, out recordId))
+                if (!Guid.TryParse(txtRecordId.Text, out recordId))
                 {
                     searchByPrimaryName = true;
                 }
@@ -239,6 +242,39 @@ namespace MscrmTools.ComponentComparer
             string sB = TryFormatJson(GetStringContent(eB, attribute));
 
             Compare(sA, sB);
+        }
+
+        public void OnIncomingMessage(MessageBusEventArgs message)
+        {
+            if (message.SourcePlugin == "Solution Layers Explorer" &&
+               message.TargetArgument is string parameter &&
+               !string.IsNullOrWhiteSpace(parameter))
+            {
+                var parameters = parameter.Split(';');
+                if (parameters.Length == 4)
+                {
+                    if (bool.Parse(parameters[0]))
+                    {
+                        comboBox1.SelectedItem = parameters[1];
+                        textBox1.Text = parameters[2];
+                        textBox1.Tag = new Guid(parameters[3]);
+
+                        btnCompare_Click(btnCompareSpecific, new EventArgs());
+                    }
+                    else
+                    {
+                        txtEntity.Text = parameters[1];
+                        txtAttribute.Text = parameters[2];
+                        txtRecordId.Text = parameters[3];
+
+                        btnCompare_Click(btnCompare, new EventArgs());
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this, "Unexpected number of arguments", $"4 parameters were expected. Receieved {parameters.Length}", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         /// <summary>

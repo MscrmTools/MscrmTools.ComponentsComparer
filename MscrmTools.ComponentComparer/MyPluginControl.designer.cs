@@ -49,7 +49,7 @@ namespace MscrmTools.ComponentComparer
             this.pnlTechnical = new System.Windows.Forms.Panel();
             this.lblEntity = new System.Windows.Forms.Label();
             this.lblAttribute = new System.Windows.Forms.Label();
-            this.txtFormId = new System.Windows.Forms.TextBox();
+            this.txtRecordId = new System.Windows.Forms.TextBox();
             this.txtAttribute = new System.Windows.Forms.TextBox();
             this.lblRecordId = new System.Windows.Forms.Label();
             this.txtEntity = new System.Windows.Forms.TextBox();
@@ -84,34 +84,34 @@ namespace MscrmTools.ComponentComparer
             this.toolStripSeparator1});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
-            this.toolStripMenu.Size = new System.Drawing.Size(1754, 38);
+            this.toolStripMenu.Size = new System.Drawing.Size(2105, 46);
             this.toolStripMenu.TabIndex = 4;
             this.toolStripMenu.Text = "toolStrip1";
             // 
             // tslSourceEnv
             // 
             this.tslSourceEnv.Name = "tslSourceEnv";
-            this.tslSourceEnv.Size = new System.Drawing.Size(70, 33);
+            this.tslSourceEnv.Size = new System.Drawing.Size(70, 28);
             this.tslSourceEnv.Text = "Source:";
             // 
             // tslSourceEnvSelected
             // 
             this.tslSourceEnvSelected.ForeColor = System.Drawing.Color.Red;
             this.tslSourceEnvSelected.Name = "tslSourceEnvSelected";
-            this.tslSourceEnvSelected.Size = new System.Drawing.Size(70, 33);
+            this.tslSourceEnvSelected.Size = new System.Drawing.Size(70, 28);
             this.tslSourceEnvSelected.Text = "Not set";
             // 
             // tslTargetEnv
             // 
             this.tslTargetEnv.Name = "tslTargetEnv";
-            this.tslTargetEnv.Size = new System.Drawing.Size(64, 33);
+            this.tslTargetEnv.Size = new System.Drawing.Size(64, 28);
             this.tslTargetEnv.Text = "Target:";
             // 
             // tslTargetEnvSelected
             // 
             this.tslTargetEnvSelected.ForeColor = System.Drawing.Color.Red;
             this.tslTargetEnvSelected.Name = "tslTargetEnvSelected";
-            this.tslTargetEnvSelected.Size = new System.Drawing.Size(70, 33);
+            this.tslTargetEnvSelected.Size = new System.Drawing.Size(70, 28);
             this.tslTargetEnvSelected.Text = "Not set";
             // 
             // tsbSetTargetEnv
@@ -120,14 +120,14 @@ namespace MscrmTools.ComponentComparer
             this.tsbSetTargetEnv.Image = global::MscrmTools.ComponentComparer.Properties.Resources.lightning;
             this.tsbSetTargetEnv.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSetTargetEnv.Name = "tsbSetTargetEnv";
-            this.tsbSetTargetEnv.Size = new System.Drawing.Size(34, 33);
+            this.tsbSetTargetEnv.Size = new System.Drawing.Size(34, 28);
             this.tsbSetTargetEnv.Text = "Set target environment";
             this.tsbSetTargetEnv.Click += new System.EventHandler(this.tsbSetTargetEnv_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
             // 
             // pnlTop
             // 
@@ -135,7 +135,7 @@ namespace MscrmTools.ComponentComparer
             this.pnlTop.Controls.Add(this.gbTechnical);
             this.pnlTop.Controls.Add(this.gbSelection);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Location = new System.Drawing.Point(0, 38);
+            this.pnlTop.Location = new System.Drawing.Point(0, 55);
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(1754, 124);
             this.pnlTop.TabIndex = 6;
@@ -241,7 +241,7 @@ namespace MscrmTools.ComponentComparer
             // 
             this.pnlTechnical.Controls.Add(this.lblEntity);
             this.pnlTechnical.Controls.Add(this.lblAttribute);
-            this.pnlTechnical.Controls.Add(this.txtFormId);
+            this.pnlTechnical.Controls.Add(this.txtRecordId);
             this.pnlTechnical.Controls.Add(this.txtAttribute);
             this.pnlTechnical.Controls.Add(this.lblRecordId);
             this.pnlTechnical.Controls.Add(this.txtEntity);
@@ -269,12 +269,12 @@ namespace MscrmTools.ComponentComparer
             this.lblAttribute.TabIndex = 11;
             this.lblAttribute.Text = "Attribute";
             // 
-            // txtFormId
+            // txtRecordId
             // 
-            this.txtFormId.Location = new System.Drawing.Point(121, 67);
-            this.txtFormId.Name = "txtFormId";
-            this.txtFormId.Size = new System.Drawing.Size(331, 26);
-            this.txtFormId.TabIndex = 5;
+            this.txtRecordId.Location = new System.Drawing.Point(121, 67);
+            this.txtRecordId.Name = "txtRecordId";
+            this.txtRecordId.Size = new System.Drawing.Size(331, 26);
+            this.txtRecordId.TabIndex = 5;
             // 
             // txtAttribute
             // 
@@ -405,12 +405,12 @@ namespace MscrmTools.ComponentComparer
             this.diffControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.diffControl1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.diffControl1.LineDiffHeight = 63;
-            this.diffControl1.Location = new System.Drawing.Point(0, 162);
+            this.diffControl1.Location = new System.Drawing.Point(0, 204);
             this.diffControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.diffControl1.Name = "diffControl1";
             this.diffControl1.OverviewWidth = 44;
             this.diffControl1.ShowWhiteSpaceInLineDiff = true;
-            this.diffControl1.Size = new System.Drawing.Size(1754, 733);
+            this.diffControl1.Size = new System.Drawing.Size(2105, 870);
             this.diffControl1.TabIndex = 9;
             this.diffControl1.ViewFont = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             // 
@@ -461,7 +461,7 @@ namespace MscrmTools.ComponentComparer
         private System.Windows.Forms.Panel pnlTechnical;
         private System.Windows.Forms.Label lblEntity;
         private System.Windows.Forms.Label lblAttribute;
-        private System.Windows.Forms.TextBox txtFormId;
+        private System.Windows.Forms.TextBox txtRecordId;
         private System.Windows.Forms.TextBox txtAttribute;
         private System.Windows.Forms.Label lblRecordId;
         private System.Windows.Forms.TextBox txtEntity;
