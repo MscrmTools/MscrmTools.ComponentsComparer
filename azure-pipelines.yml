@@ -9,16 +9,14 @@ variables:
 
 steps:
 
-- checkout: self
-  submodules: true
+
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 4.6.0'
   inputs:
     versionSpec: 4.6.0
     checkLatest: true
 
-- script: |
-    git submodule update --force
+
     
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
