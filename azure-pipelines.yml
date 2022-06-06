@@ -8,16 +8,12 @@ jobs:
     ToolName: 'MscrmTools.ComponentsComparer'
 
   steps:
-
-
   - task: NuGetToolInstaller@0
     displayName: 'Use NuGet 4.6.0'
     inputs:
       versionSpec: 4.6.0
       checkLatest: true
-
-
-      
+            
   - task: NuGetCommand@2
     displayName: 'NuGet restore'
     inputs:
@@ -52,7 +48,7 @@ jobs:
   - powershell: |
       # Write your PowerShell commands here.
       $kvSecretBytes = [System.Convert]::FromBase64String("$(CodeSigning-TanguyTouzard)")
-     [System.IO.File]::WriteAllBytes("$(Build.SourcesDirectory)\certificate.pfx", $kvSecretBytes)
+      [System.IO.File]::WriteAllBytes("$(Build.SourcesDirectory)\certificate.pfx", $kvSecretBytes)
     displayName: 'Store certificate locally'
 
   - task: NuGetCommand@2
