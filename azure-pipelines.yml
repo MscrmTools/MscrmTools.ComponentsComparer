@@ -5,7 +5,7 @@ jobs:
     vmImage: windows-latest
 
   variables:
-    ToolName: 'MscrmTools.ComponentsComparer'
+    ToolName: 'MscrmTools.ComponentComparer'
 
   steps:
   - task: NuGetToolInstaller@0
