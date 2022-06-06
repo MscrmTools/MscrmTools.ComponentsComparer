@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Interfaces;
 
@@ -110,7 +111,7 @@ namespace MscrmTools.ComponentComparer
                         contentA = ModernAppHelper.OptimizeAppDescriptor(contentA, Service, (List<EntityMetadata>)xecb.DataSource);
                         contentB = ModernAppHelper.OptimizeAppDescriptor(contentB, targetService, targetEmds);
 
-                        Compare(TryFormatJson(contentA), TryFormatJson(contentB));
+                        Compare(TryFormatJson(contentA, out bool _), TryFormatJson(contentB, out bool _));
                     }
                     catch (Exception error)
                     {
@@ -238,8 +239,14 @@ namespace MscrmTools.ComponentComparer
                 }
             }
 
-            string sA = TryFormatJson(GetStringContent(eA, attribute));
-            string sB = TryFormatJson(GetStringContent(eB, attribute));
+            string sA = TryFormatJson(GetStringContent(eA, attribute), out bool isJsonA);
+            string sB = TryFormatJson(GetStringContent(eB, attribute), out bool isJsonB);
+
+            if (!isJsonA || !isJsonB)
+            {
+                sA = TryFormatXml(sA);
+                sB = TryFormatXml(sB);
+            }
 
             Compare(sA, sB);
         }
@@ -521,16 +528,46 @@ namespace MscrmTools.ComponentComparer
             return string.Empty;
         }
 
-        private string TryFormatJson(string s)
+        private string TryFormatJson(string s, out bool isJson)
         {
             try
             {
                 JObject json = JObject.Parse(s);
+                isJson = true;
                 return json.ToString();
             }
             catch
             {
+                isJson = false;
                 return s;
+            }
+        }
+
+        private string TryFormatXml(string xml)
+        {
+            try
+            {
+                XDocument doc = XDocument.Parse(xml);
+
+                doc = Sort(doc, 0, "", 1);
+
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.OmitXmlDeclaration = true;
+                settings.Indent = true;
+                settings.NewLineOnAttributes = false;
+
+                var sb = new StringBuilder();
+
+                using (XmlWriter writer = XmlWriter.Create(sb, settings))
+                {
+                    doc.WriteTo(writer);
+                }
+
+                return doc.ToString();
+            }
+            catch (Exception)
+            {
+                return xml;
             }
         }
 
@@ -551,5 +588,99 @@ namespace MscrmTools.ComponentComparer
             txtRecord.Text = string.Empty;
             txtRecord.Tag = null;
         }
+
+        #region Private Method - Sort
+
+        ///<summary>
+        /// Sort an XML Element based on a minimum level to perform the
+        /// sort from and either based on the value
+        /// of an attribute of an XML Element or by the name of the XML Element.
+        /// Code from : https://www.codeproject.com/Articles/166357/XML-Alphabetizer
+        ///</summary>
+        ///<param name="file">File to load and sort</param>
+        ///<param name="level">Minimum level to apply the sort from.
+        /// 0 for root level.</param>
+        ///<param name="attribute">Name of the attribute to sort by.
+        /// "" for no sort</param>
+        ///<param name="sortAttributes">Sort attributes none,
+        /// ascending or descending for all sorted XML nodes</param>
+        ///<returns>Sorted XElement based on the criteria passed in.</returns>
+
+        private static XDocument Sort(XDocument file,
+            int level, string attribute, int sortAttributes)
+        {
+            return new XDocument(Sort(file.Root, level, attribute, sortAttributes));
+        }
+
+        ///<summary>
+        /// Sort an XML Element based on a minimum level to perform the
+        /// sort from and either based on the value
+        /// of an attribute of an XML Element or by the name of the XML Element.
+        /// Code from : https://www.codeproject.com/Articles/166357/XML-Alphabetizer
+        ///</summary>
+        ///<param name="element">Element to sort</param>
+        ///<param name="level">Minimum level to apply the sort from.
+        /// 0 for root level.</param>
+        ///<param name="attribute">Name of the attribute to sort by.
+        /// "" for no sort</param>
+        ///<param name="sortAttributes">Sort attributes none,
+        /// ascending or descending for all sorted XML nodes</param>
+        ///<returns>Sorted XElement based on the criteria passed in.</returns>
+
+        private static XElement Sort(XElement element,
+            int level, string attribute, int sortAttributes)
+        {
+            XElement newElement = new XElement(element.Name,
+                from child in element.Elements()
+                    //orderby
+                    //    (child.Ancestors().Count() > level)
+                    //        ? (
+                    //            (child.HasAttributes &&
+                    //                !string.IsNullOrEmpty(attribute)
+                    //            && child.Attribute(attribute) != null)
+                    //                ? child.Attribute(attribute).
+                    //                    Value.ToString()
+                    //                : child.Name.ToString()
+                    //            )
+                    //        : ""  //End of the orderby clause
+                select Sort(child, level, attribute, sortAttributes));
+            if (element.HasAttributes)
+            {
+                switch (sortAttributes)
+                {
+                    case 0: //None
+                        foreach (XAttribute attrib in element.Attributes())
+                        {
+                            newElement.SetAttributeValue
+                                (attrib.Name, attrib.Value);
+                        }
+                        break;
+
+                    case 1: //Ascending
+                        foreach (XAttribute attrib in element.Attributes().
+                        OrderBy(a => a.Name.ToString()))
+                        {
+                            newElement.SetAttributeValue
+                                (attrib.Name, attrib.Value);
+                        }
+                        break;
+
+                    case 2: //Descending
+                        foreach (XAttribute attrib in element.Attributes().
+                        OrderByDescending(a => a.Name.ToString()))
+                        {
+                            newElement.SetAttributeValue
+                                (attrib.Name, attrib.Value);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            return newElement;
+        }
+
+        #endregion Private Method - Sort
     }
 }

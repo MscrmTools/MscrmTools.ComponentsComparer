@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-	<metadata>
-		<id>MscrmTools.ComponentComparer</id>
-		<version>1.2021.10.0</version>
-		<title>Advanced Component Comparer for XrmToolBox</title>
-		<authors>MscrmTools</authors>
-		<owners>MscrmTools</owners>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<projectUrl>https://github.com/MscrmTools/MscrmTools.ComponentComparer</projectUrl>
-		<iconUrl>https://raw.githubusercontent.com/wiki/MscrmTools/XrmToolBox/Images/logo_0100.png</iconUrl>
-		<description>Compare records between two environments</description>
-		<summary>Compare records between two environments</summary>
-		<releaseNotes>Renamed tool to avoid conflict with another existing tool
-Implemented IMessageBusHost interface to allow using this tool with Solution Layers Explorer
+  <metadata>
+    <id>MscrmTools.ComponentComparer</id>
+    <version>1.2021.10.0</version>
+    <title>Advanced Component Comparer for XrmToolBox</title>
+    <authors>MscrmTools</authors>
+    <owners>MscrmTools</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://github.com/MscrmTools/MscrmTools.ComponentComparer</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/wiki/MscrmTools/XrmToolBox/Images/logo_0100.png</iconUrl>
+    <description>Compare records between two environments</description>
+    <summary>Compare records between two environments</summary>
+    <releaseNotes>
+      Improved Xml formatting to compare better content
     </releaseNotes>
-		<tags>XrmToolBox Plugin Components Comparer</tags>
-		<dependencies>
-			<dependency id="XrmToolBox" version="1.2016.4.28" />
-		</dependencies>
-	</metadata>
-	<files>
-		<file src="bin\Release\Plugins\MscrmTools.ComponentComparer.dll" target="lib\net452\Plugins" />
-	</files>
+    <tags>XrmToolBox Plugin Components Comparer</tags>
+    <dependencies>
+      <dependency id="XrmToolBox" version="1.2016.4.28" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Plugins\MscrmTools.ComponentComparer.dll" target="lib\net452\Plugins" />
+  </files>
 </package>
